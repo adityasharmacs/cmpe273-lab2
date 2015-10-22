@@ -9,7 +9,7 @@ import (
 type NameRequest struct {
     Name string `json:"name"`
   }
-type Response struct {
+type NameResponse struct {
     Greeting string `json:"greeting"`
 }
 func hello(rw http.ResponseWriter, req *http.Request, p httprouter.Params) {
@@ -17,27 +17,28 @@ func hello(rw http.ResponseWriter, req *http.Request, p httprouter.Params) {
 }
 
 func hi(rw http.ResponseWriter, req *http.Request, p httprouter.Params){
-    var a NameRequest
-    var b Response
+    var name NameRequest
+    var resp NameResponse
     decoder := json.NewDecoder(req.Body)
     fmt.Println(req.Body)
 
-    err := decoder.Decode(&a)
-    if err != nil {
-    panic(err)
+    err1 := decoder.Decode(&name)
+    if err1 != nil {
+    panic(err1)
     }
 
-    b.Greeting="Hello,"+a.Name
-    show,_ := json.Marshal(b)
-    fmt.Fprintf(rw,string(show))
+    resp.Greeting="Hello,"+name.Name
+
+    output,_ := json.Marshal(resp)
+    fmt.Fprintf(rw,string(output))
 }
 
 func main() {
     mux := httprouter.New()
     mux.GET("/hello/:name", hello)
-    mux.POST("/hi", hi)
+    mux.POST("/hello", hi)
     server := http.Server{
-            Addr:        "localhost:8080",
+            Addr:        "0.0.0.0:8080",
             Handler: mux,
     }
     server.ListenAndServe()

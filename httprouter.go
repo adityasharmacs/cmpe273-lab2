@@ -28,7 +28,7 @@ func hi(rw http.ResponseWriter, req *http.Request, p httprouter.Params){
     }
 
     b.Greeting="Hello,"+a.Name
-    show,_ := json.Marshal(r)
+    show,_ := json.Marshal(b)
     fmt.Fprintf(rw,string(show))
 }
 
